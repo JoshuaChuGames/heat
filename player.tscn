@@ -28,7 +28,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4flbx"]
-size = Vector2(500, 500)
+size = Vector2(250, 500)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2hs0m"]
 atlas = ExtResource("4_sweqy")
@@ -138,6 +138,7 @@ polygon = PackedVector2Array(-32, 0, -128, -512, -64, -544, 64, -544, 128, -512,
 [node name="ParryArea" type="Area2D" parent="AimObject" unique_id=986498435]
 collision_layer = 2
 collision_mask = 2
+priority = 1
 
 [node name="CollisionShape2D" type="CollisionPolygon2D" parent="AimObject/ParryArea" unique_id=670955715]
 polygon = PackedVector2Array(-32, 0, -128, -512, -64, -544, 64, -544, 128, -512, 32, 0)
@@ -148,4 +149,6 @@ sprite_frames = SubResource("SpriteFrames_bwjto")
 animation = &"parry"
 
 [connection signal="animation_finished" from="AimObject/SlashSprite" to="AimObject" method="hide_slash"]
+[connection signal="body_entered" from="AimObject/SlashArea" to="." method="_on_slash_area_body_entered"]
+[connection signal="body_entered" from="AimObject/ParryArea" to="." method="_on_parry_area_body_entered"]
 [connection signal="animation_finished" from="AimObject/ParrySprite" to="AimObject" method="hide_parry"]

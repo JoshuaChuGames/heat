@@ -1,0 +1,109 @@
+[gd_scene format=3 uid="uid://dqfhb256i083l"]
+
+[ext_resource type="Texture2D" uid="uid://odth6fkf1a6k" path="res://Assets/Placeholder/hp_bg.png" id="1_5m0x8"]
+[ext_resource type="Script" uid="uid://ddy88iwvlsxky" path="res://player_ui.gd" id="1_a4em4"]
+[ext_resource type="Texture2D" uid="uid://bipapk5mw0vvv" path="res://Assets/Placeholder/hp_hp.png" id="2_654h1"]
+[ext_resource type="Script" uid="uid://d3gd00w15wmjk" path="res://resource_bar.gd" id="3_654h1"]
+[ext_resource type="Texture2D" uid="uid://cs2a18mm8uxnw" path="res://Assets/Placeholder/hp_shield_background.png" id="4_tybkg"]
+[ext_resource type="Texture2D" uid="uid://b16jf76qdyvoj" path="res://Assets/Placeholder/hp_shield.png" id="5_a4em4"]
+
+[node name="PlayerUI" type="Control" unique_id=1969259973 groups=["PlayerUI"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_a4em4")
+
+[node name="HealthBar" type="TextureProgressBar" parent="." unique_id=978336197]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.4
+anchor_bottom = 0.075
+offset_right = 4.0
+offset_bottom = 27.0
+nine_patch_stretch = true
+texture_under = ExtResource("1_5m0x8")
+texture_progress = ExtResource("2_654h1")
+script = ExtResource("3_654h1")
+
+[node name="Current" type="Label" parent="HealthBar" unique_id=1751954070]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -11.5
+offset_right = -5.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slash" type="Label" parent="HealthBar" unique_id=1208127392]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "/"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Max" type="Label" parent="HealthBar" unique_id=476966752]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 5.0
+offset_top = -11.5
+offset_right = 50.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HeatGauge" type="TextureProgressBar" parent="." unique_id=1006662936]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.15
+anchor_right = 0.4
+anchor_bottom = 0.175
+nine_patch_stretch = true
+texture_under = ExtResource("4_tybkg")
+texture_progress = ExtResource("5_a4em4")
+script = ExtResource("3_654h1")
+
+[node name="Total" type="Label" parent="HeatGauge" unique_id=1295128451]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 4.1999817
+offset_top = -11.5
+offset_right = 45.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
