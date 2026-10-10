@@ -2,8 +2,15 @@
 
 [ext_resource type="Texture2D" uid="uid://oesojkojca4" path="res://Assets/Placeholder/player_placeholder.png" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://cr3myncj4sike" path="res://player.gd" id="1_onrkg"]
+[ext_resource type="Script" uid="uid://mepp2pg0cv6b" path="res://heat_gauge_data.gd" id="2_2hs0m"]
 [ext_resource type="Script" uid="uid://dbam3b43e428n" path="res://aim_object.gd" id="3_hqtel"]
 [ext_resource type="Texture2D" uid="uid://c1iw1c352o5px" path="res://Assets/Placeholder/slash_placeholder.png" id="4_sweqy"]
+[ext_resource type="Texture2D" uid="uid://bl7mtnuqqqyhx" path="res://Assets/Placeholder/aim_indicator_placeholder.png" id="5_sweqy"]
+[ext_resource type="Texture2D" uid="uid://bhgogjtiwagb2" path="res://Assets/Placeholder/parry_placeholder.png" id="7_1jxqw"]
+
+[sub_resource type="Resource" id="Resource_1jxqw"]
+script = ExtResource("2_2hs0m")
+metadata/_custom_type_script = "uid://mepp2pg0cv6b"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_onrkg"]
 atlas = ExtResource("1_4flbx")
@@ -19,9 +26,6 @@ animations = [{
 "name": &"default",
 "speed": 5.0
 }]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_4flbx"]
-size = Vector2(185.17, 413.88)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2hs0m"]
 atlas = ExtResource("4_sweqy")
@@ -54,27 +58,102 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_b26j0")
 }],
-"loop": true,
+"loop": false,
 "name": &"slash",
-"speed": 8.0
+"speed": 12.0
 }]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n7ghd"]
+atlas = ExtResource("7_1jxqw")
+region = Rect2(0, 0, 250, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nvl01"]
+atlas = ExtResource("7_1jxqw")
+region = Rect2(250, 0, 250, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ivps1"]
+atlas = ExtResource("7_1jxqw")
+region = Rect2(500, 0, 250, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_urp6f"]
+atlas = ExtResource("7_1jxqw")
+region = Rect2(750, 0, 250, 250)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bwjto"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n7ghd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nvl01")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ivps1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_urp6f")
+}],
+"loop": false,
+"name": &"parry",
+"speed": 12.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4flbx"]
+size = Vector2(250, 500)
 
 [node name="Player" type="CharacterBody2D" unique_id=245191176]
 scale = Vector2(0.25, 0.25)
+collision_layer = 3
 script = ExtResource("1_onrkg")
+heat_data = SubResource("Resource_1jxqw")
+lateral_speed = 600
+fast_fall_speed = 100
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1703930791]
 sprite_frames = SubResource("SpriteFrames_i3pqv")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2063218685]
-position = Vector2(-12.03, 11.13)
-shape = SubResource("RectangleShape2D_4flbx")
 
 [node name="AimObject" type="Node2D" parent="." unique_id=1124077878]
 visible = false
 script = ExtResource("3_hqtel")
 
 [node name="SlashSprite" type="AnimatedSprite2D" parent="AimObject" unique_id=396698357]
+visible = false
 sprite_frames = SubResource("SpriteFrames_n7ghd")
 animation = &"slash"
-frame_progress = 0.566168
+frame = 3
+frame_progress = 0.6347199
+
+[node name="AimIndicatorSprite" type="Sprite2D" parent="AimObject" unique_id=980681826]
+texture = ExtResource("5_sweqy")
+
+[node name="SlashArea" type="Area2D" parent="AimObject" unique_id=1452495016]
+process_mode = 4
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="AimObject/SlashArea" unique_id=108383554]
+polygon = PackedVector2Array(-64, 64, -160, -512, -64, -544, 64, -544, 160, -512, 64, 64)
+
+[node name="ParryArea" type="Area2D" parent="AimObject" unique_id=986498435 groups=["ParryBox"]]
+process_mode = 4
+collision_layer = 8
+collision_mask = 8
+priority = 5
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="AimObject/ParryArea" unique_id=670955715]
+polygon = PackedVector2Array(-64, 64, -160, -512, -64, -544, 64, -544, 160, -512, 64, 64)
+
+[node name="ParrySprite" type="AnimatedSprite2D" parent="AimObject" unique_id=415152180]
+visible = false
+sprite_frames = SubResource("SpriteFrames_bwjto")
+animation = &"parry"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2063218685]
+shape = SubResource("RectangleShape2D_4flbx")
+
+[connection signal="animation_finished" from="AimObject/SlashSprite" to="AimObject" method="hide_slash"]
+[connection signal="body_entered" from="AimObject/SlashArea" to="." method="_on_slash_area_body_entered"]
+[connection signal="area_entered" from="AimObject/ParryArea" to="." method="_on_parry_area_body_entered"]
+[connection signal="body_entered" from="AimObject/ParryArea" to="." method="_on_parry_area_body_entered"]
+[connection signal="animation_finished" from="AimObject/ParrySprite" to="AimObject" method="hide_parry"]
