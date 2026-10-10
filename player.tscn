@@ -2,6 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://oesojkojca4" path="res://Assets/Placeholder/player_placeholder.png" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://cr3myncj4sike" path="res://player.gd" id="1_onrkg"]
+[ext_resource type="Script" uid="uid://dbam3b43e428n" path="res://aim_object.gd" id="3_hqtel"]
+[ext_resource type="Texture2D" uid="uid://c1iw1c352o5px" path="res://Assets/Placeholder/slash_placeholder.png" id="4_sweqy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_onrkg"]
 atlas = ExtResource("1_4flbx")
@@ -21,8 +23,44 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4flbx"]
 size = Vector2(500, 500)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_2hs0m"]
+atlas = ExtResource("4_sweqy")
+region = Rect2(0, 0, 250, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1jxqw"]
+atlas = ExtResource("4_sweqy")
+region = Rect2(250, 0, 250, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dw050"]
+atlas = ExtResource("4_sweqy")
+region = Rect2(500, 0, 250, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b26j0"]
+atlas = ExtResource("4_sweqy")
+region = Rect2(750, 0, 250, 250)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_n7ghd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2hs0m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1jxqw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dw050")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b26j0")
+}],
+"loop": true,
+"name": &"slash",
+"speed": 8.0
+}]
+
 [node name="Player" type="CharacterBody2D" unique_id=245191176]
-scale = Vector2(0.35, 0.35)
+scale = Vector2(0.25, 0.25)
 script = ExtResource("1_onrkg")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1703930791]
@@ -30,3 +68,11 @@ sprite_frames = SubResource("SpriteFrames_i3pqv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2063218685]
 shape = SubResource("RectangleShape2D_4flbx")
+
+[node name="AimObject" type="Node2D" parent="." unique_id=1124077878]
+script = ExtResource("3_hqtel")
+
+[node name="SlashSprite" type="AnimatedSprite2D" parent="AimObject" unique_id=396698357]
+sprite_frames = SubResource("SpriteFrames_n7ghd")
+animation = &"slash"
+frame_progress = 0.566168
