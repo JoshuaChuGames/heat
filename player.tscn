@@ -21,7 +21,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4flbx"]
-size = Vector2(500, 500)
+size = Vector2(185.17, 413.88)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2hs0m"]
 atlas = ExtResource("4_sweqy")
@@ -67,9 +67,11 @@ script = ExtResource("1_onrkg")
 sprite_frames = SubResource("SpriteFrames_i3pqv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2063218685]
+position = Vector2(-12.03, 11.13)
 shape = SubResource("RectangleShape2D_4flbx")
 
 [node name="AimObject" type="Node2D" parent="." unique_id=1124077878]
+visible = false
 script = ExtResource("3_hqtel")
 
 [node name="SlashSprite" type="AnimatedSprite2D" parent="AimObject" unique_id=396698357]
