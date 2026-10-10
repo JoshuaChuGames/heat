@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://bcffj1aeosb88" path="res://Assets/Placeholder/tile_placeholder.png" id="1_u52ul"]
 [ext_resource type="PackedScene" uid="uid://b6a4hv5i5lwqx" path="res://player.tscn" id="2_vonw3"]
+[ext_resource type="PackedScene" uid="uid://dqfhb256i083l" path="res://player_ui.tscn" id="4_0b4ue"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vonw3"]
 texture = ExtResource("1_u52ul")
@@ -16,12 +17,17 @@ sources/0 = SubResource("TileSetAtlasSource_vonw3")
 
 [node name="Node2D" type="Node2D" unique_id=968981124]
 
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1610239913]
+
+[node name="PlayerUI" parent="CanvasLayer" unique_id=1969259973 instance=ExtResource("4_0b4ue")]
+
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=35299301]
 tile_map_data = PackedByteArray("AAAAAAwAAAAAAAAAAAABAAwAAAAAAAAAAAACAAwAAAAAAAAAAAADAAwAAAAAAAAAAAAEAAwAAAAAAAAAAAAFAAwAAAAAAAAAAAAGAAwAAAAAAAAAAAAHAAwAAAAAAAAAAAAIAAwAAAAAAAAAAAAJAAwAAAAAAAAAAAAKAAwAAAAAAAAAAAALAAwAAAAAAAAAAAAMAAwAAAAAAAAAAAANAAwAAAAAAAAAAAAOAAwAAAAAAAAAAAAPAAwAAAAAAAAAAAAQAAwAAAAAAAAAAAARAAwAAAAAAAAAAAASAAwAAAAAAAAAAAATAAwAAAAAAAAAAAAUAAwAAAAAAAAAAAAVAAwAAAAAAAAAAAAWAAwAAAAAAAAAAAA=")
 tile_set = SubResource("TileSet_oi3di")
 collision_visibility_mode = 1
 
-[node name="Player" parent="." unique_id=245191176 instance=ExtResource("2_vonw3")]
+[node name="Player" parent="." unique_id=245191176 groups=["Player"] instance=ExtResource("2_vonw3")]
 position = Vector2(361, 430)
 jump_speed = 1000
 gravity = 2000.0
+slash_knockback = 500.0

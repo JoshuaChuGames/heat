@@ -18,6 +18,14 @@ config/icon="res://icon.svg"
 
 window/stretch/mode="canvas_items"
 
+[global_group]
+
+Player=""
+Enemy=""
+EnemyHitBox=""
+PlayerUI=""
+ParryBox=""
+
 [input]
 
 left={
