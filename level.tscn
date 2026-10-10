@@ -1,0 +1,27 @@
+[gd_scene format=4 uid="uid://d0e3q46jg84ok"]
+
+[ext_resource type="Texture2D" uid="uid://bcffj1aeosb88" path="res://Assets/Placeholder/tile_placeholder.png" id="1_u52ul"]
+[ext_resource type="PackedScene" uid="uid://b6a4hv5i5lwqx" path="res://player.tscn" id="2_vonw3"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vonw3"]
+texture = ExtResource("1_u52ul")
+texture_region_size = Vector2i(50, 50)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-25, -25, 25, -25, 25, 25, -25, 25)
+
+[sub_resource type="TileSet" id="TileSet_oi3di"]
+tile_size = Vector2i(50, 50)
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_vonw3")
+
+[node name="Node2D" type="Node2D" unique_id=968981124]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=35299301]
+tile_map_data = PackedByteArray("AAAAAAwAAAAAAAAAAAABAAwAAAAAAAAAAAACAAwAAAAAAAAAAAADAAwAAAAAAAAAAAAEAAwAAAAAAAAAAAAFAAwAAAAAAAAAAAAGAAwAAAAAAAAAAAAHAAwAAAAAAAAAAAAIAAwAAAAAAAAAAAAJAAwAAAAAAAAAAAAKAAwAAAAAAAAAAAALAAwAAAAAAAAAAAAMAAwAAAAAAAAAAAANAAwAAAAAAAAAAAAOAAwAAAAAAAAAAAAPAAwAAAAAAAAAAAAQAAwAAAAAAAAAAAARAAwAAAAAAAAAAAASAAwAAAAAAAAAAAATAAwAAAAAAAAAAAAUAAwAAAAAAAAAAAAVAAwAAAAAAAAAAAAWAAwAAAAAAAAAAAA=")
+tile_set = SubResource("TileSet_oi3di")
+collision_visibility_mode = 1
+
+[node name="Player" parent="." unique_id=245191176 instance=ExtResource("2_vonw3")]
+position = Vector2(361, 430)
+jump_speed = 1000
+gravity = 2000.0
