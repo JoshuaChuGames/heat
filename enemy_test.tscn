@@ -1,13 +1,10 @@
-[gd_scene format=3 uid="uid://bs80lcpuobjns"]
+[gd_scene format=3 uid="uid://ds3qg1t1fkic4"]
 
-[ext_resource type="PackedScene" uid="uid://ubm704pbn2vu" path="res://melee.tscn" id="1_tegdf"]
-[ext_resource type="Texture2D" uid="uid://df5efcg46722a" path="res://icon.svg" id="2_c6iok"]
+[ext_resource type="PackedScene" uid="uid://scqfifhs4786" path="res://melee.tscn" id="1_tegdf"]
+[ext_resource type="PackedScene" uid="uid://b6a4hv5i5lwqx" path="res://player.tscn" id="2_tegdf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dm0k"]
 size = Vector2(1148.5, 161)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_h2yge"]
-size = Vector2(129, 129)
 
 [node name="main" type="Control" unique_id=1655101190]
 layout_mode = 3
@@ -29,12 +26,5 @@ shape = SubResource("RectangleShape2D_7dm0k")
 [node name="Melee" parent="." unique_id=473035682 instance=ExtResource("1_tegdf")]
 position = Vector2(571, 421)
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=728226476]
-position = Vector2(398, 261)
-
-[node name="Sprite2D" type="Sprite2D" parent="Player" unique_id=1777621148]
-texture = ExtResource("2_c6iok")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=1707921110]
-position = Vector2(0, 0.5)
-shape = SubResource("RectangleShape2D_h2yge")
+[node name="Player" parent="." unique_id=245191176 groups=["Player"] instance=ExtResource("2_tegdf")]
+position = Vector2(65, 424)
