@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://ubm704pbn2vu"]
+[gd_scene format=3 uid="uid://scqfifhs4786"]
 
-[ext_resource type="Script" uid="uid://r5rfanr1shy0" path="res://melee.gd" id="1_bg0yx"]
+[ext_resource type="Script" uid="uid://cdja5cfivje7s" path="res://melee.gd" id="1_bg0yx"]
 [ext_resource type="Texture2D" uid="uid://df5efcg46722a" path="res://icon.svg" id="2_fus3g"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5l7l7"]
@@ -9,7 +9,7 @@ size = Vector2(128, 129)
 [node name="Melee" type="CharacterBody2D" unique_id=473035682]
 script = ExtResource("1_bg0yx")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1053894296]
+[node name="enemy_sprite" type="Sprite2D" parent="." unique_id=1053894296]
 texture = ExtResource("2_fus3g")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=287777457]
