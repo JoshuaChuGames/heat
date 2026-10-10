@@ -16,7 +16,7 @@ func update_hp(current_hp: int = -1, max_hp: int = -1) -> void:
 
 func update_heat(heat_progress: float = -1.0, total_heat: int = -1) -> void:
 	if heat_progress != -1.0:
-		heat_gauge.value = heat_progress
+		heat_gauge.value = heat_progress   
 	if total_heat != -1:
 		if heat_gauge.total:
 			heat_gauge.total.text = str(total_heat)

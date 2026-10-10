@@ -7,6 +7,8 @@
 size = Vector2(100, 20)
 
 [node name="enemy_slash" type="Area2D" unique_id=1703810023 groups=["EnemyHitBox"]]
+collision_layer = 10
+collision_mask = 2
 script = ExtResource("1_hmthk")
 lifetime = null
 

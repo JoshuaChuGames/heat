@@ -2,7 +2,6 @@
 
 [ext_resource type="Texture2D" uid="uid://bcffj1aeosb88" path="res://Assets/Placeholder/tile_placeholder.png" id="1_u52ul"]
 [ext_resource type="PackedScene" uid="uid://b6a4hv5i5lwqx" path="res://player.tscn" id="2_vonw3"]
-[ext_resource type="PackedScene" uid="uid://ubm704pbn2vu" path="res://melee.tscn" id="3_oi3di"]
 [ext_resource type="PackedScene" uid="uid://dqfhb256i083l" path="res://player_ui.tscn" id="4_0b4ue"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vonw3"]
@@ -32,7 +31,3 @@ position = Vector2(361, 430)
 jump_speed = 1000
 gravity = 2000.0
 slash_knockback = 500.0
-
-[node name="Melee" parent="." unique_id=473035682 instance=ExtResource("3_oi3di")]
-z_index = -1
-position = Vector2(720, 284)

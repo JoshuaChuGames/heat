@@ -24,6 +24,7 @@ Player=""
 Enemy=""
 EnemyHitBox=""
 PlayerUI=""
+ParryBox=""
 
 [input]
 

@@ -7,7 +7,7 @@
 size = Vector2(128, 129)
 
 [node name="Melee" type="CharacterBody2D" unique_id=473035682 groups=["Enemy"]]
-collision_layer = 3
+collision_layer = 5
 script = ExtResource("1_bg0yx")
 
 [node name="enemy_sprite" type="Sprite2D" parent="." unique_id=1053894296]

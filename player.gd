@@ -23,6 +23,9 @@ class_name Player
 @export var parry_knockback: float = 500
 @export var parry_heat_gain: float = 35
 
+@export var heat_decay_delay: float = 2.5
+@export var heat_decay_rate: float = 5
+
 @export var slash_damage: int = 10
 @export var slash_knockback: float = 300
 
@@ -36,6 +39,8 @@ var slash_time: float = 0
 var parry_time: float = 0
 var invincibility_time: float = 0
 var invincibility_duration: float = 0.5
+
+var heat_decay_time: float = 0
 
 var is_jumping = false
 var is_slashing = false
@@ -64,6 +69,8 @@ func _process(delta):
 		is_slashing = false
 	if is_invincible && (current_time - invincibility_time) / 1000 > invincibility_duration:
 		is_invincible = false
+	if heat.current_heat > 0 && (current_time - heat_decay_time) / 1000 > heat_decay_delay:
+		update_heat(-heat_decay_rate * delta)
 	
 	pass
 
@@ -138,8 +145,7 @@ func _on_slash_area_body_entered(body):
 	if body.is_in_group("Enemy"):
 		body.take_damage(slash_damage)
 		body.apply_knockback(slash_knockback, global_position)
-		heat.increase_heat(slash_heat_gain)
-		update_heat()
+		update_heat(slash_heat_gain, true)
 		return
 		
 func _on_parry_area_body_entered(body):
@@ -148,8 +154,7 @@ func _on_parry_area_body_entered(body):
 		is_invincible = true
 		invincibility_time = Time.get_ticks_msec()
 		invincibility_duration = parry_invincibility_duration
-		heat.increase_heat(parry_heat_gain)
-		update_heat()
+		update_heat(parry_heat_gain, true)
 		return
 		
 func take_damage(damage: int) -> void:
@@ -167,7 +172,10 @@ func apply_knockback(knockback: float, source_position: Vector2, kb_vector: Vect
 		var knockback_direction = (global_position - source_position).normalized()
 		knockback_vector += knockback_direction * knockback
 
-func update_heat():
+func update_heat(h: float, set_decay: bool = false):
+	heat.increase_heat(h)
+	if set_decay:
+		heat_decay_time = Time.get_ticks_msec()
 	ui.update_heat(heat.current_heat, heat.total_heat)
 
 func update_hp() -> void:
