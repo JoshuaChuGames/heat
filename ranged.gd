@@ -1,66 +1,89 @@
 extends CharacterBody2D
 
-#var player = get_tree().get_first_node_in_group("Player")
+
 #const SPEED = 300.0
 #const JUMP_VELOCITY = -400.0
-
-enum State{Patrol,Attacking}
+@onready var player = get_tree().get_first_node_in_group("Player")
+enum State{Patrol,Shooting,Idle}
 var projectile = preload("res://projectile.tscn")
 var current_state:State = State.Patrol
 var speed = 150
 var change_direction_timer = 3
 var move_direction = 1
 var hp = 100
-var timer_reached = false
+var shoot_cd = 2
 
-var reset_timer = 3
+func despawn() -> void:
+	queue_free()
+func take_damage(damage) -> void:
+	if hp > 0:
+		hp -= damage
+		if hp <= 0:
+			despawn()
 
-func attack_logic() -> void:
-	var proj = projectile.instantiate()
-	proj.global_position = proj.global_position
-	#proj.direction = (player.global_position - global_position)
-	#proj.rotation = proj.direction.angle()
-	
+func shoot_proj() -> void:
+	velocity.x = 0
+	if shoot_cd <= 0:
+		print("projectile spawn")
+		var proj = projectile.instantiate()
+		var dir_to_player = global_position.direction_to(player.global_position)
+		proj.global_position = global_position + (position.direction_to(player.global_position)*100)
+		proj.rotation = dir_to_player.angle() + deg_to_rad(90)
+		get_parent().add_child(proj)
+		shoot_cd = 1
 	
 func wander_logic() -> void:	
-	var bounced = false
-	print(change_direction_timer)
-	print(move_direction)
-	
-	if change_direction_timer <= 0:
-		#wait 3 seconds, then reset timer and go in the other direction
-		bounced = true	
-	if bounced:
-		velocity.x = 0
-		move_direction *= -1
-		#await get_tree().create_timer(2.5).timeout
-		change_direction_timer = 3
-		
-		
-	
-	
+	if move_direction < 1:
+		$enemy_sprite.flip_h = true
+	else:
+		$enemy_sprite.flip_h = false
 	velocity.x = speed * move_direction
-	move_and_slide()
 	
+	
+func idle_logic() -> void:
+	velocity.x = 0
 	
 func update_State()-> void:
+	if not player:
+		return
+	var dist_to_player = global_position.distance_to(player.global_position)
+	
 	match current_state:
 		State.Patrol:
-			if (global_position.distance_to(player.global_position) < 50): # if player within enemy radius, placeholder 
-				State.Attacking
-		State.Attacking:
-			if true and reset_timer ==0:
-				State.Patrol
+			if player:
+				if change_direction_timer <= 0:
+					current_state = State.Idle
+					change_direction_timer = 2.5
+			if dist_to_player < 500:
+				current_state = State.Shooting
+				shoot_cd = 2
+				velocity.x = 0
+		State.Idle:
+			if change_direction_timer <= 0:
+				current_state = State.Patrol
+				move_direction *= -1
+				change_direction_timer = 3
+			if dist_to_player < 500:
+				current_state = State.Shooting
+				shoot_cd = 2
+				velocity.x = 0
+		State.Shooting:
+			if dist_to_player > 500:
+				current_state = State.Patrol
+				change_direction_timer = 3
+				velocity.x = speed
 		
-	
 	
 	
 func _physics_process(delta: float) -> void:
 	change_direction_timer -= delta
-	wander_logic()
-	if State.Attacking:
-		attack_logic()
-	if State.Patrol:
+	shoot_cd -= delta
+	update_State()
+	if current_state == State.Patrol:
 		wander_logic()
-		
-	
+	if current_state == State.Idle:
+		idle_logic()
+		velocity.x = 0
+	if current_state == State.Shooting:
+		shoot_proj()
+	move_and_slide()
