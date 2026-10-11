@@ -52,7 +52,7 @@ func enable_parry_area(parry_duration: float):
 	parry_area.process_mode = Node.PROCESS_MODE_DISABLED
 
 func _process(delta):
-	var mouse_position: Vector2 = get_viewport().get_mouse_position()
+	var mouse_position: Vector2 = get_global_mouse_position()
 	var angle_to_aim = (mouse_position - global_position).angle() + PI/2
 	
 	aim_indicator_sprite.position = (mouse_position - global_position).normalized() * aim_indicator_distance

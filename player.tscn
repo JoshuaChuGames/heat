@@ -114,7 +114,6 @@ fast_fall_speed = 100
 sprite_frames = SubResource("SpriteFrames_i3pqv")
 
 [node name="AimObject" type="Node2D" parent="." unique_id=1124077878]
-visible = false
 script = ExtResource("3_hqtel")
 
 [node name="SlashSprite" type="AnimatedSprite2D" parent="AimObject" unique_id=396698357]
