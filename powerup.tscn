@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://bgwmr3pj6gey0"]
+
+[ext_resource type="Script" uid="uid://c5ywbaui5rt5a" path="res://powerup.gd" id="1_vcqqu"]
+[ext_resource type="Texture2D" uid="uid://bum3i2vhweru4" path="res://Assets/VFX Free Pack/Effect_Constellation/30fps/Spritesheets/Effect_Constellation_1_299x313.png" id="2_wh0le"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6cuax"]
+atlas = ExtResource("2_wh0le")
+region = Rect2(0, 0, 299, 313)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_to7bl"]
+atlas = ExtResource("2_wh0le")
+region = Rect2(897, 0, 299, 313)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xu7g1"]
+atlas = ExtResource("2_wh0le")
+region = Rect2(0, 313, 299, 313)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iuyn8"]
+atlas = ExtResource("2_wh0le")
+region = Rect2(897, 313, 299, 313)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fo5kl"]
+atlas = ExtResource("2_wh0le")
+region = Rect2(0, 626, 299, 313)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_clkb8"]
+atlas = ExtResource("2_wh0le")
+region = Rect2(897, 626, 299, 313)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jr2tc"]
+atlas = ExtResource("2_wh0le")
+region = Rect2(0, 939, 299, 313)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_puqwx"]
+atlas = ExtResource("2_wh0le")
+region = Rect2(897, 939, 299, 313)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_13pq6"]
+atlas = ExtResource("2_wh0le")
+region = Rect2(0, 1252, 299, 313)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yttoi"]
+atlas = ExtResource("2_wh0le")
+region = Rect2(897, 1252, 299, 313)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_g8qv3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6cuax")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_to7bl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xu7g1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iuyn8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fo5kl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_clkb8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jr2tc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_puqwx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_13pq6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yttoi")
+}],
+"loop": true,
+"name": &"default",
+"speed": 12.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lhhtn"]
+size = Vector2(250, 250)
+
+[sub_resource type="LabelSettings" id="LabelSettings_wh0le"]
+font_size = 24
+
+[node name="Powerup" type="Area2D" unique_id=290481257 groups=["Powerup"]]
+script = ExtResource("1_vcqqu")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=583233159]
+sprite_frames = SubResource("SpriteFrames_g8qv3")
+autoplay = "default"
+frame_progress = 0.5697902
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=293039528]
+shape = SubResource("RectangleShape2D_lhhtn")
+
+[node name="Label" type="Label" parent="." unique_id=515546695]
+z_index = 2
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -322.5
+offset_top = -200.0
+offset_right = 322.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Healing Warmth - Hold Space to heal at the cost of Heat"
+label_settings = SubResource("LabelSettings_wh0le")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

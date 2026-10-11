@@ -7,6 +7,7 @@ class_name EnemyMelee
 var enemy_slash = preload("res://enemy_slash.tscn")
 
 @onready var player = get_tree().get_first_node_in_group("Player")
+@onready var attack_indicator: AnimatedSprite2D = $AttackIndicator
 
 
 
@@ -36,8 +37,11 @@ var lunge_vector: Vector2 = Vector2.ZERO
 var timer_reached = false
 
 @export var swing_cooldown = 2
-@export var swing_delay = 0.15
+@export var swing_delay = 0.25
 @export var attack_distance = 200
+
+@export var damage_flash_duration: float = 0.25
+@export var damage_flash_total: int = 2
 
 func _init():
 	set_physics_process(false)
@@ -45,6 +49,7 @@ func _init():
 	set_physics_process(true)
 
 func _ready():
+	material = material.duplicate()
 	pass
 
 func start_lunge()->void:
@@ -67,10 +72,15 @@ func enemy_slash_action() -> void:
 		slash.initialize(self, 0.25, damage, knockback, dir_to_player)
 		get_parent().add_child(slash)
 		swing_cooldown = 2
-		swing_delay = 0.15
+		swing_delay = 0.25
 
+func show_attack_indicator() -> void:
+	attack_indicator.visible = true
+	attack_indicator.play("default")
 
-	pass
+func hide_attack_indicator() -> void:
+	attack_indicator.visible = false
+
 func wander_logic() -> void:	
 	if move_direction < 1:
 		$enemy_sprite.flip_h = true
@@ -131,7 +141,8 @@ func update_State()-> void:
 		State.Lunging:
 			if dist_to_player <= attack_distance:
 				current_state = State.Attacking
-				swing_delay = 0.15
+				show_attack_indicator()
+				swing_delay = 0.25
 				swing_cooldown = 0
 				lunge_cooldown = 3
 			elif lunge_timer <= 0 or dist_to_player > lunge_distance:
@@ -172,6 +183,7 @@ func take_damage(damage: int) -> void:
 	hp -= damage
 	if hp <= 0:
 		queue_free()
+	damage_flash()
 
 func apply_knockback(knockback: float, source_position: Vector2, kb_vector: Vector2 = Vector2.ZERO) -> void:
 	if kb_vector != Vector2.ZERO:
@@ -180,3 +192,11 @@ func apply_knockback(knockback: float, source_position: Vector2, kb_vector: Vect
 		var knockback_direction = (global_position - source_position).normalized()
 		knockback_vector += knockback_direction * knockback
 		print(knockback_vector)
+
+func damage_flash():
+	var tween = get_tree().create_tween()
+	tween.set_trans(Tween.TRANS_LINEAR)
+	tween.set_loops(damage_flash_total)
+	tween.tween_property(material, "shader_parameter/flash_amount", 1.0, damage_flash_duration / 2)
+	tween.tween_property(material, "shader_parameter/flash_amount", 0.0, damage_flash_duration / 2)
+	tween.play()

@@ -31,13 +31,23 @@ class_name Player
 @export var heat_decay_delay: float = 2.5
 @export var heat_decay_rate: float = 5
 
+@export var hazard_duration: float = 1.0
+
 @export var slash_damage: int = 10
 @export var slash_knockback: float = 500
 
 @export var air_jumps: int = 1
 
+@export var damage_flash_duration: float = 0.25
+@export var damage_flash_total: int = 2
+
+@export var heal_amount: int = 25
+@export var heal_cost: int = 1
+@export var heal_duration: float = 3.5
+
 
 @onready var aim_object: AimObject = $AimObject
+@onready var particles: AnimatedSprite2D = $Particles
 
 var knockback_vector: Vector2 = Vector2.ZERO
 var dash_vector: Vector2 = Vector2.ZERO
@@ -50,6 +60,10 @@ var parry_time: float = 0
 var invincibility_time: float = 0
 var invincibility_duration: float = 0.5
 var dash_time: float = 0
+var hazard_time: float = 0
+var damage_flash_time: float = 0
+var damage_flash_count: int = 0
+var heal_time: float = 0
 
 var heat_decay_time: float = 0
 
@@ -58,11 +72,18 @@ var is_dashing = false
 var is_slashing = false
 var is_parrying = false
 var is_invincible = false
+var is_hazarded = false
+var is_healing = false
+
+var can_heal = false
+
+var last_grounded_position: Vector2
 
 var heat: HeatGauge
 var ui: PlayerUI
 
 func _ready():
+	material = material.duplicate()
 	heat = HeatGauge.new()
 	
 	if heat_data:
@@ -85,6 +106,14 @@ func _process(delta):
 		is_dashing = false
 	if heat.current_heat > 0 && (current_time - heat_decay_time) / 1000 > heat_decay_delay:
 		update_heat(-heat_decay_rate * delta)
+	if is_hazarded && (current_time - hazard_time) / 1000 > hazard_duration:
+		is_hazarded = false
+		return_to_last_grounded_position()
+	if is_healing && (current_time - heal_time) / 1000 > heal_duration:
+		is_healing = false
+		hp = min(hp + heal_amount, max_hp)
+		update_hp()
+		particles.stop()
 	
 	pass
 
@@ -122,7 +151,7 @@ func calculate_velocity(delta):
 	var new_velocity: Vector2 = movement_vector
 	new_velocity.y += new_y_velocity
 	
-	if is_parrying:
+	if is_parrying || is_healing:
 		if new_velocity.x >= 0:
 			new_velocity.x = min(new_velocity.x, parry_max_speed)
 		else:
@@ -133,15 +162,24 @@ func calculate_velocity(delta):
 	if knockback_vector.length() > 0:
 		knockback_vector = knockback_vector.lerp(Vector2.ZERO, delta*20)
 		new_velocity += knockback_vector
-	
+
 	if is_dashing:
 		new_velocity = dash_vector
+	
+	if is_hazarded:
+		new_velocity = Vector2.ZERO
 	return new_velocity
 	
 
 func _physics_process(delta):
 	velocity = calculate_velocity(delta)
+	
+	if is_on_floor() && !is_hazarded:
+		last_grounded_position = global_position
+	
 	move_and_slide()
+
+	check_hazard_collision()
 
 func _unhandled_input(event):
 	if is_parrying || is_slashing:
@@ -165,7 +203,20 @@ func _unhandled_input(event):
 			dash_vector = get_input()
 			dash_vector.y = 0
 			dash_vector = dash_vector.normalized() * dash_speed
+	if event.is_action_pressed("ability_2"):
+		heal_start()
+	if event.is_action_released("ability_2"):
+		is_healing = false
+		particles.stop()
 
+func heal_start():
+	if !can_heal || heat.total_heat < heal_cost || hp >= max_hp:
+		return
+	
+	heal_time = Time.get_ticks_msec()
+	is_healing = true
+	particles.play("heal")
+		
 
 func _on_slash_area_body_entered(body):
 	if body.is_in_group("Enemy"):
@@ -190,6 +241,7 @@ func take_damage(damage: int) -> void:
 	update_hp()
 	if hp <= 0:
 		queue_free()
+	damage_flash()
 
 func apply_knockback(knockback: float, source_position: Vector2, kb_vector: Vector2 = Vector2.ZERO) -> void:
 	if kb_vector != Vector2.ZERO:
@@ -206,3 +258,32 @@ func update_heat(h: float, set_decay: bool = false):
 
 func update_hp() -> void:
 	ui.update_hp(hp, max_hp)
+
+func return_to_last_grounded_position() -> void:
+	global_position = last_grounded_position
+
+func check_hazard_collision() -> void:
+	if is_hazarded:
+		return
+	for i in get_slide_collision_count():
+		var collision = get_slide_collision(i)
+		if collision.get_collider() is MapLayer:
+			var tilemap_layer = collision.get_collider() as MapLayer
+			if tilemap_layer.is_hazard_tile(collision.get_position()):
+				is_hazarded = true
+				hazard_time = Time.get_ticks_msec()
+				take_damage(tilemap_layer.get_hazard_damage(collision.get_position()))
+				return
+	is_hazarded = false
+
+func damage_flash():
+	var tween = get_tree().create_tween()
+	tween.set_trans(Tween.TRANS_LINEAR)
+	tween.set_loops(damage_flash_total)
+	tween.tween_property(material, "shader_parameter/flash_amount", 1.0, damage_flash_duration / 2)
+	tween.tween_property(material, "shader_parameter/flash_amount", 0.0, damage_flash_duration / 2)
+	tween.play()
+
+func apply_powerup(powerup_id: String) -> void:
+	if powerup_id == "healing":
+		can_heal = true

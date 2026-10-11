@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://dhja7s03rdwqa"]
+
+[ext_resource type="Texture2D" uid="uid://dwvdt30h7vj58" path="res://Assets/Legacy-Fantasy - High Forest 2.3/Assets/Props-Rocks.png" id="1_kijdd"]
+[ext_resource type="Script" uid="uid://cth4apga5eldd" path="res://heat_gate.gd" id="1_s3yoi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s3yoi"]
+atlas = ExtResource("1_kijdd")
+region = Rect2(0, 160, 64, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t7bqe"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s3yoi")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kijdd"]
+size = Vector2(64, 96)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s3yoi"]
+size = Vector2(70, 100)
+
+[node name="HeatGate" type="StaticBody2D" unique_id=173171420]
+scale = Vector2(4, 4)
+script = ExtResource("1_s3yoi")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=660822304]
+sprite_frames = SubResource("SpriteFrames_t7bqe")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=253273619]
+shape = SubResource("RectangleShape2D_kijdd")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1280230476]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=399229405]
+shape = SubResource("RectangleShape2D_s3yoi")
+
+[node name="Label" type="Label" parent="." unique_id=1813364245]
+offset_left = -63.25
+offset_top = -16.5
+offset_right = 65.75
+offset_bottom = 6.5
+text = "Heat Required: 3"
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_body_entered"]

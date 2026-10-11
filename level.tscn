@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://bcffj1aeosb88" path="res://Assets/Placeholder/tile_placeholder.png" id="1_u52ul"]
 [ext_resource type="PackedScene" uid="uid://b6a4hv5i5lwqx" path="res://player.tscn" id="2_vonw3"]
 [ext_resource type="PackedScene" uid="uid://dqfhb256i083l" path="res://player_ui.tscn" id="4_0b4ue"]
+[ext_resource type="PackedScene" uid="uid://ubm704pbn2vu" path="res://melee.tscn" id="4_f2txt"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vonw3"]
 texture = ExtResource("1_u52ul")
@@ -29,3 +30,28 @@ collision_visibility_mode = 1
 
 [node name="Player" parent="." unique_id=245191176 groups=["Player"] instance=ExtResource("2_vonw3")]
 position = Vector2(361, 430)
+hp = 100
+max_hp = 100
+jump_speed = 1000
+gravity = 2000.0
+max_speed = 1000.0
+parry_max_speed = 50.0
+dash_speed = 2000.0
+dash_duration = 0.15
+dash_delay = 0.5
+slash_delay = 0.25
+slash_duration = 0.15
+slash_heat_gain = 10.0
+parry_delay = 0.75
+parry_duration = 0.15
+parry_invincibility_duration = 0.5
+parry_knockback = 500.0
+parry_heat_gain = 35.0
+heat_decay_delay = 2.5
+heat_decay_rate = 5.0
+hazard_duration = 1.0
+slash_damage = 10
+slash_knockback = 500.0
+air_jumps = 1
+
+[node name="Melee" parent="." unique_id=473035682 instance=ExtResource("4_f2txt")]
