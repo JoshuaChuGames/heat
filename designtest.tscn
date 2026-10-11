@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://dgcgdlmrt04lc" path="res://Mossy - Decorations&Hazards.png" id="3_q6r6c"]
 [ext_resource type="Texture2D" uid="uid://c7avtk65ym07n" path="res://2d_lights_and_shadows_neutral_point_light.webp" id="4_0hol4"]
 [ext_resource type="PackedScene" uid="uid://b6a4hv5i5lwqx" path="res://player.tscn" id="5_52jx7"]
+[ext_resource type="PackedScene" uid="uid://dqfhb256i083l" path="res://player_ui.tscn" id="6_oi88h"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_q6r6c"]
 polygon = PackedVector2Array(-256, -256, 256, -256, 256, 256, -256, 256)
@@ -504,6 +505,10 @@ sources/2 = SubResource("TileSetAtlasSource_rj586")
 
 [node name="Node2D" type="Node2D" unique_id=1583605262]
 
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=479875844]
+
+[node name="PlayerUI" parent="CanvasLayer" unique_id=1969259973 instance=ExtResource("6_oi88h")]
+
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=622430115]
 position = Vector2(-12, -46)
 scale = Vector2(0.125, 0.125)
@@ -515,8 +520,6 @@ color = Color(0.19747895, 0.32954097, 1, 1)
 
 [node name="Player" parent="." unique_id=245191176 instance=ExtResource("5_52jx7")]
 position = Vector2(109, -122)
-jump_speed = 1000
-gravity = 2000.0
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1856982106]
 
@@ -526,3 +529,5 @@ energy = 1.95
 shadow_color = Color(1, 1, 1, 0.46666667)
 texture = ExtResource("4_0hol4")
 texture_scale = 14.31
+
+[editable path="Player"]
