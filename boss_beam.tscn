@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bsgtak05sk5pg"]
+
+[ext_resource type="Script" uid="uid://bbg67yuf3delm" path="res://boss_beam.gd" id="1_lhlq8"]
+[ext_resource type="Texture2D" uid="uid://df5efcg46722a" path="res://icon.svg" id="2_skx2t"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qxf0c"]
+size = Vector2(2137, 20)
+
+[node name="boss_beam" type="Area2D" unique_id=888552102]
+script = ExtResource("1_lhlq8")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1501172245]
+scale = Vector2(16.695313, 0.15624999)
+texture = ExtResource("2_skx2t")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=879411672]
+shape = SubResource("RectangleShape2D_qxf0c")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
