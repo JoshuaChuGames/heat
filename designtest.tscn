@@ -7,11 +7,17 @@
 [ext_resource type="PackedScene" uid="uid://b6a4hv5i5lwqx" path="res://player.tscn" id="5_52jx7"]
 [ext_resource type="Texture2D" uid="uid://dwvdt30h7vj58" path="res://Assets/Legacy-Fantasy - High Forest 2.3/Assets/Props-Rocks.png" id="5_e40wg"]
 [ext_resource type="Script" uid="uid://c0f7emfn37diy" path="res://map_layer.gd" id="5_y74o3"]
-[ext_resource type="PackedScene" uid="uid://dqfhb256i083l" path="res://player_ui.tscn" id="6_oi88h"]
 [ext_resource type="Shader" uid="uid://bh7ugwpl3k4vf" path="res://combatant_outline.gdshader" id="7_c4u3n"]
+[ext_resource type="Script" uid="uid://b4vf4oaphhry0" path="res://camera_2d.gd" id="7_npyn6"]
 [ext_resource type="PackedScene" uid="uid://dhja7s03rdwqa" path="res://heat gate.tscn" id="10_5i0oy"]
 [ext_resource type="PackedScene" uid="uid://ubm704pbn2vu" path="res://melee.tscn" id="11_d16j3"]
 [ext_resource type="PackedScene" uid="uid://bgwmr3pj6gey0" path="res://powerup.tscn" id="12_o2skv"]
+[ext_resource type="Script" uid="uid://ex5imtijrppm" path="res://spawn_area.gd" id="14_w4xya"]
+[ext_resource type="PackedScene" uid="uid://codco7i8ucdxv" path="res://boss.tscn" id="15_cg1kh"]
+[ext_resource type="PackedScene" uid="uid://dogegtw5cymlh" path="res://ranged.tscn" id="16_4mwjg"]
+[ext_resource type="PackedScene" uid="uid://dhipul3mxs712" path="res://controller_hint.tscn" id="17_p3bxw"]
+[ext_resource type="Texture2D" uid="uid://bqg70p5tg5q1f" path="res://Assets/badbackground.png" id="18_71k32"]
+[ext_resource type="Texture2D" uid="uid://bgnskfhu51tw" path="res://Assets/Controllers and Keyboard/kb_dark_all.png" id="18_iegpl"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_q6r6c"]
 polygon = PackedVector2Array(-256, -256, 256, -256, 256, 256, -256, 256)
@@ -548,11 +554,14 @@ shader = ExtResource("7_c4u3n")
 shader_parameter/flash_amount = 0.0
 shader_parameter/flash_color = Color(1, 0, 0, 1)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w4xya"]
+size = Vector2(800, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p3bxw"]
+atlas = ExtResource("18_iegpl")
+region = Rect2(144, 80, 16, 16)
+
 [node name="Node2D" type="Node2D" unique_id=1583605262]
-
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=479875844]
-
-[node name="PlayerUI" parent="CanvasLayer" unique_id=1969259973 instance=ExtResource("6_oi88h")]
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=622430115]
 position = Vector2(-12, -46)
@@ -564,17 +573,20 @@ script = ExtResource("5_y74o3")
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=2097529040]
 color = Color(0.19747895, 0.32954097, 1, 1)
 
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1856982106]
+position = Vector2(109, -122)
+scale = Vector2(0.25, 0.25)
+zoom = Vector2(0.75, 0.75)
+position_smoothing_speed = 0.0
+script = ExtResource("7_npyn6")
+
 [node name="Player" parent="." unique_id=245191176 groups=["Player"] instance=ExtResource("5_52jx7")]
 material = SubResource("ShaderMaterial_e40wg")
 position = Vector2(109, -122)
 
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1856982106]
-zoom = Vector2(0.75, 0.75)
-position_smoothing_speed = 0.0
-
 [node name="PointLight2D" type="PointLight2D" parent="Player" unique_id=1601052183]
 position = Vector2(48, 140)
-energy = 1.95
+energy = 1.25
 shadow_color = Color(1, 1, 1, 0.46666667)
 texture = ExtResource("4_0hol4")
 texture_scale = 14.31
@@ -592,13 +604,7 @@ position = Vector2(3584, -543)
 position = Vector2(3940, -559)
 
 [node name="Melee4" parent="." unique_id=702067535 instance=ExtResource("11_d16j3")]
-position = Vector2(4831, -1233)
-
-[node name="Melee5" parent="." unique_id=416712779 instance=ExtResource("11_d16j3")]
-position = Vector2(5305, -1180)
-
-[node name="Melee6" parent="." unique_id=1118047482 instance=ExtResource("11_d16j3")]
-position = Vector2(5670, -1264)
+position = Vector2(5336, -1233)
 
 [node name="Powerup" parent="." unique_id=290481257 instance=ExtResource("12_o2skv")]
 position = Vector2(8232, 1135)
@@ -610,15 +616,23 @@ powerup_id = "double_jump"
 
 [node name="Label" parent="Powerup2" index="2" unique_id=515546695]
 anchors_preset = 15
+offset_left = -241.0
+offset_top = -178.0
+offset_right = 240.0
+offset_bottom = -144.0
 text = "Winged Boots - Jump once while in the air"
 horizontal_alignment = 1
 
 [node name="Powerup3" parent="." unique_id=784327367 instance=ExtResource("12_o2skv")]
 position = Vector2(8083, 4470)
-powerup_id = "double_jump"
+powerup_id = "increased_damage"
 
 [node name="Label" parent="Powerup3" index="2" unique_id=515546695]
 anchors_preset = 15
+offset_left = -232.0
+offset_top = -176.0
+offset_right = 232.0
+offset_bottom = -142.0
 text = "Flaming Sword - Deal Increased Damage"
 horizontal_alignment = 1
 
@@ -629,7 +643,146 @@ heat_requirement = 5
 [node name="Label" parent="HeatGate2" index="3" unique_id=1813364245]
 text = "Heat Required: 5"
 
+[node name="SpawnArea" type="Area2D" parent="." unique_id=436760794]
+position = Vector2(9312, 5933)
+scale = Vector2(4, 4)
+script = ExtResource("14_w4xya")
+spawn_entity = ExtResource("15_cg1kh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpawnArea" unique_id=1458214415]
+position = Vector2(0, -18.5)
+shape = SubResource("RectangleShape2D_w4xya")
+
+[node name="Ranged" parent="." unique_id=2004620214 instance=ExtResource("16_4mwjg")]
+position = Vector2(5079, -1164)
+
+[node name="Ranged2" parent="." unique_id=1283466191 instance=ExtResource("16_4mwjg")]
+position = Vector2(5598, -1174)
+
+[node name="Ranged3" parent="." unique_id=384350570 instance=ExtResource("16_4mwjg")]
+position = Vector2(1244, 926)
+
+[node name="Ranged4" parent="." unique_id=957098255 instance=ExtResource("16_4mwjg")]
+position = Vector2(738, 1031)
+
+[node name="Melee5" parent="." unique_id=1212654782 instance=ExtResource("11_d16j3")]
+position = Vector2(1486, 1373)
+
+[node name="Melee6" parent="." unique_id=1415161431 instance=ExtResource("11_d16j3")]
+position = Vector2(220, 1381)
+
+[node name="ControllerHint" parent="." unique_id=1517636802 instance=ExtResource("17_p3bxw")]
+position = Vector2(461, -319)
+scale = Vector2(2, 2)
+
+[node name="ControllerHint2" parent="." unique_id=943713282 instance=ExtResource("17_p3bxw")]
+position = Vector2(1976, -583)
+scale = Vector2(2, 2)
+
+[node name="Label" parent="ControllerHint2" index="0" unique_id=884030103]
+text = "to attack!"
+
+[node name="TextureRect" parent="ControllerHint2" index="1" unique_id=305600620]
+offset_left = 55.5
+offset_top = 1.0
+offset_right = 95.5
+offset_bottom = 41.0
+texture = SubResource("AtlasTexture_p3bxw")
+
+[node name="TextureRect2" parent="ControllerHint2" index="2" unique_id=2018854539]
+visible = false
+
+[node name="TextureRect3" parent="ControllerHint2" index="3" unique_id=1944246226]
+visible = false
+
+[node name="TextureRect4" parent="ControllerHint2" index="4" unique_id=1737953168]
+visible = false
+
+[node name="ControllerHint3" parent="." unique_id=114790231 instance=ExtResource("17_p3bxw")]
+position = Vector2(2293, -583)
+scale = Vector2(2, 2)
+
+[node name="Label" parent="ControllerHint3" index="0" unique_id=884030103]
+text = "to parry!"
+
+[node name="TextureRect" parent="ControllerHint3" index="1" unique_id=305600620]
+offset_left = 55.5
+offset_top = 1.0
+offset_right = 95.5
+offset_bottom = 41.0
+texture = SubResource("AtlasTexture_p3bxw")
+
+[node name="TextureRect2" parent="ControllerHint3" index="2" unique_id=2018854539]
+visible = false
+
+[node name="TextureRect3" parent="ControllerHint3" index="3" unique_id=1944246226]
+visible = false
+
+[node name="TextureRect4" parent="ControllerHint3" index="4" unique_id=1737953168]
+visible = false
+
+[node name="ControllerHint4" parent="." unique_id=1063180500 instance=ExtResource("17_p3bxw")]
+position = Vector2(3584, -1271)
+scale = Vector2(2, 2)
+
+[node name="Label" parent="ControllerHint4" index="0" unique_id=884030103]
+text = "to dash!"
+
+[node name="TextureRect" parent="ControllerHint4" index="1" unique_id=305600620]
+offset_left = 55.5
+offset_top = 1.0
+offset_right = 95.5
+offset_bottom = 41.0
+texture = SubResource("AtlasTexture_p3bxw")
+
+[node name="TextureRect2" parent="ControllerHint4" index="2" unique_id=2018854539]
+visible = false
+
+[node name="TextureRect3" parent="ControllerHint4" index="3" unique_id=1944246226]
+visible = false
+
+[node name="TextureRect4" parent="ControllerHint4" index="4" unique_id=1737953168]
+visible = false
+
+[node name="ControllerHint5" parent="." unique_id=318611234 instance=ExtResource("17_p3bxw")]
+position = Vector2(7022, 990)
+scale = Vector2(2, 2)
+
+[node name="Label" parent="ControllerHint5" index="0" unique_id=884030103]
+text = "to dash!"
+
+[node name="TextureRect" parent="ControllerHint5" index="1" unique_id=305600620]
+offset_left = 55.5
+offset_top = 1.0
+offset_right = 95.5
+offset_bottom = 41.0
+texture = SubResource("AtlasTexture_p3bxw")
+
+[node name="TextureRect2" parent="ControllerHint5" index="2" unique_id=2018854539]
+visible = false
+
+[node name="TextureRect3" parent="ControllerHint5" index="3" unique_id=1944246226]
+visible = false
+
+[node name="TextureRect4" parent="ControllerHint5" index="4" unique_id=1737953168]
+visible = false
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=801275079]
+z_index = -2
+offset_left = -3940.0
+offset_top = -2338.0
+offset_right = 22034.0
+offset_bottom = 8166.0
+texture = ExtResource("18_71k32")
+expand_mode = 2
+
+[connection signal="body_entered" from="SpawnArea" to="SpawnArea" method="_on_body_entered"]
+
 [editable path="Player"]
 [editable path="Powerup2"]
 [editable path="Powerup3"]
 [editable path="HeatGate2"]
+[editable path="ControllerHint2"]
+[editable path="ControllerHint3"]
+[editable path="ControllerHint4"]
+[editable path="ControllerHint5"]

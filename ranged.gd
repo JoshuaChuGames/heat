@@ -1,47 +1,34 @@
-extends CharacterBody2D
+extends Enemy
+class_name EnemyRanged
+
 
 
 #const SPEED = 300.0
 #const JUMP_VELOCITY = -400.0
-@onready var player = get_tree().get_first_node_in_group("Player")
 enum State{Patrol,Shooting,Idle}
 var projectile = preload("res://projectile.tscn")
 var current_state:State = State.Patrol
-var speed = 150
-var change_direction_timer = 3
-var move_direction = 1
-var hp = 100
 var shoot_cd = 2
 
-func despawn() -> void:
-	queue_free()
-func take_damage(damage) -> void:
-	if hp > 0:
-		hp -= damage
-		if hp <= 0:
-			despawn()
-
 func shoot_proj() -> void:
+	if !player:
+		return
 	velocity.x = 0
 	if shoot_cd <= 0:
 		print("projectile spawn")
-		var proj = projectile.instantiate()
+		var proj: EnemyProjectile = projectile.instantiate()
+		proj.initialize(self, 5, damage, knockback)
 		var dir_to_player = global_position.direction_to(player.global_position)
 		proj.global_position = global_position + (position.direction_to(player.global_position)*100)
 		proj.rotation = dir_to_player.angle() + deg_to_rad(90)
+		proj.direction = dir_to_player
 		get_parent().add_child(proj)
 		shoot_cd = 1
-	
-func wander_logic() -> void:	
-	if move_direction < 1:
-		$enemy_sprite.flip_h = true
-	else:
-		$enemy_sprite.flip_h = false
-	velocity.x = speed * move_direction
-	
-	
-func idle_logic() -> void:
-	velocity.x = 0
+		if player.global_position.x < global_position.x:
+			$enemy_sprite.flip_h = false
+		else:
+			$enemy_sprite.flip_h = true
+		sprite.play("shoot")
 	
 func update_State()-> void:
 	if not player:
@@ -75,7 +62,9 @@ func update_State()-> void:
 		
 	
 	
-func _physics_process(delta: float) -> void:
+func _physics_process(delta: float) -> void:	
+	if not is_on_floor() and current_state != State.Shooting :
+		velocity += get_gravity() * delta
 	change_direction_timer -= delta
 	shoot_cd -= delta
 	update_State()
@@ -86,4 +75,16 @@ func _physics_process(delta: float) -> void:
 		velocity.x = 0
 	if current_state == State.Shooting:
 		shoot_proj()
+	if knockback_vector.length() > 0:
+		knockback_vector = knockback_vector.lerp(Vector2.ZERO, delta*20)
+		velocity += knockback_vector	
+	if velocity.x != 0 && knockback_vector.length() <= 0:
+		if velocity.x < 0:
+			$enemy_sprite.flip_h = false
+		else:
+			$enemy_sprite.flip_h = true
+		
+		sprite.play("run")
+	else:
+		sprite.play("idle")
 	move_and_slide()

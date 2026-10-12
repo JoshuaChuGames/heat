@@ -6,42 +6,21 @@ class_name EnemyMelee
 #const JUMP_VELOCITY = -400.0
 var enemy_slash = preload("res://enemy_slash.tscn")
 
-@onready var player = get_tree().get_first_node_in_group("Player")
-@onready var attack_indicator: AnimatedSprite2D = $AttackIndicator
-
-
-
-
 enum State{Idle,Patrol,Attacking, Agro, Lunging}
 
 
 var current_state:State = State.Patrol
-@export var speed = 100
 @export var lunge_speed = 600
 @export var lunge_distance = 400
 @export var lunge_cooldown = 3
-@export var lunge_duration = 3
+@export var lunge_duration = 1
 
 @export var lunge_timer = 0
-@export var change_direction_timer = 3
-@export var move_direction = 1
-@export var agro_distance = 600
-@export var hp = 100
-@export var damage = 10
-@export var knockback = 300
-
-var knockback_vector: Vector2
-
-var lunge_vector: Vector2 = Vector2.ZERO
-
-var timer_reached = false
-
+@export var lunge_vector: Vector2 = Vector2.ZERO
 @export var swing_cooldown = 2
 @export var swing_delay = 0.25
 @export var attack_distance = 200
 
-@export var damage_flash_duration: float = 0.25
-@export var damage_flash_total: int = 2
 
 func _init():
 	set_physics_process(false)
@@ -64,41 +43,27 @@ func lunge_logic() -> void:
 		
 			
 func enemy_slash_action() -> void:
+	if !player:
+		return
+	var dist_to_player = global_position.distance_to(player.global_position)
 	if swing_cooldown <= 0 and swing_delay <= 0:
 		var slash: EnemySlash = enemy_slash.instantiate()
 		var dir_to_player = global_position.direction_to(player.global_position)
-		slash.global_position = player.global_position
+		if dist_to_player > attack_distance:
+			slash.global_position = global_position + (position.direction_to(player.global_position)*attack_distance)
+		else:
+			slash.global_position = player.global_position
 		slash.rotation = dir_to_player.angle() + deg_to_rad(90)
 		slash.initialize(self, 0.25, damage, knockback, dir_to_player)
 		get_parent().add_child(slash)
 		swing_cooldown = 2
 		swing_delay = 0.25
-
-func show_attack_indicator() -> void:
-	attack_indicator.visible = true
-	attack_indicator.play("default")
-
-func hide_attack_indicator() -> void:
-	attack_indicator.visible = false
-
-func wander_logic() -> void:	
-	if move_direction < 1:
-		$enemy_sprite.flip_h = true
-	else:
-		$enemy_sprite.flip_h = false
-	velocity.x = speed * move_direction
-
-func agro_logic() -> void:
-	if player:
+		current_state = State.Patrol
 		if player.global_position.x < global_position.x:
-			$enemy_sprite.flip_h = true
-			velocity.x = speed * -1
-		else:
 			$enemy_sprite.flip_h = false
-			velocity.x = speed
-	
-func idle_logic() -> void:
-	velocity.x = 0
+		else:
+			$enemy_sprite.flip_h = true
+		sprite.play("lunge")
 	
 func update_State()-> void:
 	if not player:
@@ -114,16 +79,6 @@ func update_State()-> void:
 			if change_direction_timer <= 0:
 				current_state = State.Idle
 				change_direction_timer = 2.5
-		State.Attacking:
-			if (dist_to_player > lunge_distance):
-				current_state = State.Patrol
-				lunge_cooldown = 3
-				change_direction_timer = 3
-			elif dist_to_player > attack_distance:
-				if lunge_cooldown <= 0:
-					start_lunge()
-				else: 
-					current_state = State.Patrol
 		State.Agro:
 			if (dist_to_player < lunge_distance and lunge_cooldown <=0): # if player within enemy radius, placeholder 
 				start_lunge()
@@ -145,8 +100,12 @@ func update_State()-> void:
 				swing_delay = 0.25
 				swing_cooldown = 0
 				lunge_cooldown = 3
-			elif lunge_timer <= 0 or dist_to_player > lunge_distance:
-				current_state = State.Patrol
+			elif lunge_timer <= 0:
+				current_state = State.Attacking
+				show_attack_indicator()
+				swing_delay = 0.25
+				swing_cooldown = 0
+				lunge_cooldown = 3
 				change_direction_timer = 3
 
 func _physics_process(delta: float) -> void:
@@ -177,26 +136,15 @@ func _physics_process(delta: float) -> void:
 	if knockback_vector.length() > 0:
 		knockback_vector = knockback_vector.lerp(Vector2.ZERO, delta*20)
 		velocity += knockback_vector
-	move_and_slide()
+	
+	if velocity.x != 0 && knockback_vector.length() <= 0:
+		if velocity.x < 0:
+			$enemy_sprite.flip_h = false
+		else:
+			$enemy_sprite.flip_h = true
 		
-func take_damage(damage: int) -> void:
-	hp -= damage
-	if hp <= 0:
-		queue_free()
-	damage_flash()
-
-func apply_knockback(knockback: float, source_position: Vector2, kb_vector: Vector2 = Vector2.ZERO) -> void:
-	if kb_vector != Vector2.ZERO:
-		knockback_vector += kb_vector * knockback
+		sprite.play("run")
 	else:
-		var knockback_direction = (global_position - source_position).normalized()
-		knockback_vector += knockback_direction * knockback
-		print(knockback_vector)
-
-func damage_flash():
-	var tween = get_tree().create_tween()
-	tween.set_trans(Tween.TRANS_LINEAR)
-	tween.set_loops(damage_flash_total)
-	tween.tween_property(material, "shader_parameter/flash_amount", 1.0, damage_flash_duration / 2)
-	tween.tween_property(material, "shader_parameter/flash_amount", 0.0, damage_flash_duration / 2)
-	tween.play()
+		sprite.play("idle")
+	
+	move_and_slide()

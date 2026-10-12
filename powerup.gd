@@ -17,6 +17,6 @@ func _on_body_entered(body):
 		var player = body as Player
 		player.apply_powerup(powerup_id)
 		
-		await get_tree().create_timer(3)
+		await get_tree().create_timer(3).timeout
 		queue_free()
 	

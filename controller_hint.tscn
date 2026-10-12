@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://dhipul3mxs712"]
+
+[ext_resource type="Script" uid="uid://c4gwfxmja2q0p" path="res://controller_hint.gd" id="1_nusv1"]
+[ext_resource type="Texture2D" uid="uid://bgnskfhu51tw" path="res://Assets/Controllers and Keyboard/kb_dark_all.png" id="2_7en1t"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3v4xe"]
+atlas = ExtResource("2_7en1t")
+region = Rect2(0, 352, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nqtaw"]
+atlas = ExtResource("2_7en1t")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fyb3u"]
+atlas = ExtResource("2_7en1t")
+region = Rect2(0, 288, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7xvlj"]
+atlas = ExtResource("2_7en1t")
+region = Rect2(0, 48, 16, 16)
+
+[node name="ControllerHint" type="Node2D" unique_id=1517636802]
+z_index = -1
+script = ExtResource("1_nusv1")
+
+[node name="Label" type="Label" parent="." unique_id=884030103]
+offset_left = 62.0
+offset_right = 208.0
+offset_bottom = 40.0
+text = "to move and jump!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=305600620]
+offset_top = -18.0
+offset_right = 40.0
+offset_bottom = 22.0
+texture = SubResource("AtlasTexture_3v4xe")
+
+[node name="TextureRect2" type="TextureRect" parent="." unique_id=2018854539]
+offset_left = -26.0
+offset_top = 12.0
+offset_right = 14.0
+offset_bottom = 52.0
+texture = SubResource("AtlasTexture_nqtaw")
+
+[node name="TextureRect3" type="TextureRect" parent="." unique_id=1944246226]
+offset_top = 12.0
+offset_right = 40.0
+offset_bottom = 52.0
+texture = SubResource("AtlasTexture_fyb3u")
+
+[node name="TextureRect4" type="TextureRect" parent="." unique_id=1737953168]
+offset_left = 27.0
+offset_top = 12.0
+offset_right = 67.0
+offset_bottom = 52.0
+texture = SubResource("AtlasTexture_7xvlj")

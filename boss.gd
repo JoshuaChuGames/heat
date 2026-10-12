@@ -1,13 +1,12 @@
-extends CharacterBody2D
+extends Enemy
+class_name EnemyBoss
 
 var projectile = preload("res://projectile.tscn")
 var beam = preload("res://boss_beam.tscn")
-@onready var player = get_tree().get_first_node_in_group("Player")
 var current_state:State = State.Idle
 var enemy_slash = preload("res://enemy_slash.tscn")
 var idle_timer = 2
 var melee_timer = 2
-var speed = 100
 var shoot_cd = 1
 var swing_delay = 0.3
 var has_swung = false
@@ -18,6 +17,8 @@ var ranged_finished = false
 enum State{Melee,Ranged,Barrage,Idle}
 
 func boss_melee() -> void:
+	if !player:
+		return
 	var dist_to_player = global_position.distance_to(player.global_position)
 	var move_direction = 1
 	if player.global_position.x > global_position.x:
@@ -33,8 +34,9 @@ func boss_melee() -> void:
 		velocity.x = 0
 	if dist_to_player <= 300 and !has_swung:
 		if swing_delay <=0:
-			var slash = enemy_slash.instantiate()
+			var slash: EnemySlash = enemy_slash.instantiate()
 			var dir_to_player = global_position.direction_to(player.global_position)
+			slash.initialize(self, 0.25, damage, knockback, dir_to_player)
 			slash.global_position = player.global_position
 			slash.rotation = dir_to_player.angle() + deg_to_rad(90)
 			get_parent().add_child(slash)
@@ -42,27 +44,47 @@ func boss_melee() -> void:
 			#make melee object/slash
 			has_swung = true
 			print("swung")
-		
+			if player.global_position.x < global_position.x:
+				$enemy_sprite.flip_h = true
+			else:
+				$enemy_sprite.flip_h = false
 
 func ranged_attack() -> void:
+	if !player:
+		return
 	velocity.x = 0
-	var beamatk = beam.instantiate()
+	var beamatk: BossBeam = beam.instantiate()
+	beamatk.initialize(self, 3, damage, knockback)
 	beamatk.global_position = global_position
 	beamatk.global_position.y =player.global_position.y
 	get_parent().add_child(beamatk)
 	ranged_finished = true
+	if player.global_position.x < global_position.x:
+		$enemy_sprite.flip_h = true
+	else:
+		$enemy_sprite.flip_h = false
+	sprite.play("beam")
 	
 func barrage_attack()-> void:
-	if shots_fired < 6:
+	if !player:
+		return
+	if shots_fired < 6:	
 		if shoot_cd <= 0:
 			print("projectile spawn")
-			var proj = projectile.instantiate()
+			var proj: EnemyProjectile = projectile.instantiate()
+			proj.initialize(self, 5, damage, knockback)
 			var dir_to_player = global_position.direction_to(player.global_position)
-			proj.global_position = global_position - Vector2(0, 300)
+			proj.global_position = global_position + (position.direction_to(player.global_position)*100)
 			proj.rotation = dir_to_player.angle() + deg_to_rad(90)
+			proj.direction = dir_to_player
 			get_parent().add_child(proj)
 			shoot_cd = 1
 			shots_fired += 1
+			if player.global_position.x < global_position.x:
+				$enemy_sprite.flip_h = true
+			else:
+				$enemy_sprite.flip_h = false
+			sprite.play("shoot")
 	else:
 		barrage_finished = true
 		
@@ -109,6 +131,8 @@ func update_state(delta :float) -> void:
 			
 		
 func _physics_process(delta: float) -> void:
+	if not is_on_floor():
+		velocity += get_gravity() * delta
 	shoot_cd -= delta
 	swing_delay -= delta
 	update_state(delta)
@@ -124,4 +148,21 @@ func _physics_process(delta: float) -> void:
 	if current_state == State.Ranged:
 		print("ranged")
 		ranged_attack()
+	if knockback_vector.length() > 0:
+		knockback_vector = knockback_vector.lerp(Vector2.ZERO, delta*50)
+		velocity += knockback_vector	
+	if velocity.x != 0 && knockback_vector.length() <= 0:
+		if velocity.x < 0:
+			$enemy_sprite.flip_h = true
+		else:
+			$enemy_sprite.flip_h = false
+		
+		sprite.play("run")
+	else:
+		sprite.play("idle")
 	move_and_slide()
+
+func _ready():
+	var game_manager = get_tree().get_first_node_in_group("GameManager")
+	if game_manager:
+		on_death.connect(game_manager.on_boss_death)

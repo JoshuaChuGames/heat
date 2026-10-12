@@ -1,17 +1,19 @@
 [gd_scene format=3 uid="uid://cdyyr5mqpnl3d"]
 
-[ext_resource type="Texture2D" uid="uid://df5efcg46722a" path="res://icon.svg" id="1_a85iw"]
-[ext_resource type="Script" uid="uid://cd5bpp27r8n1h" path="res://projectile.gd" id="1_qxf0c"]
+[ext_resource type="Script" uid="uid://b8m0kv5jh662n" path="res://enemy_projectile.gd" id="1_qxf0c"]
+[ext_resource type="Texture2D" uid="uid://cbsvfiuwlba4l" path="res://Assets/drive-download-20261011T063027Z-1-001/bubble.png" id="2_qxf0c"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qxf0c"]
 
-[node name="projectile" type="Area2D" unique_id=1206693020]
+[node name="projectile" type="Area2D" unique_id=1206693020 groups=["EnemyHitBox"]]
+collision_layer = 10
+collision_mask = 2
 script = ExtResource("1_qxf0c")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1501172245]
 position = Vector2(0, 0.125)
-scale = Vector2(0.15625, 0.07617188)
-texture = ExtResource("1_a85iw")
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("2_qxf0c")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=879411672]
 shape = SubResource("RectangleShape2D_qxf0c")

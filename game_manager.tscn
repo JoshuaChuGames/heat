@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dnvqm2ffdfh7y"]
+
+[ext_resource type="Script" uid="uid://dgu1ygohb6rfi" path="res://game_manager.gd" id="1_smx3j"]
+[ext_resource type="PackedScene" uid="uid://4pqund3nukl7" path="res://designtest.tscn" id="2_d5upp"]
+[ext_resource type="PackedScene" uid="uid://dqfhb256i083l" path="res://player_ui.tscn" id="2_o2178"]
+
+[node name="GameManager" type="Node2D" unique_id=75043914 groups=["GameManager"]]
+script = ExtResource("1_smx3j")
+game_scene = ExtResource("2_d5upp")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=114094802]
+
+[node name="PlayerUI" parent="CanvasLayer" unique_id=1969259973 instance=ExtResource("2_o2178")]
+
+[connection signal="on_quit" from="CanvasLayer/PlayerUI" to="." method="on_quit_pressed"]
+[connection signal="on_retry" from="CanvasLayer/PlayerUI" to="." method="on_retry_pressed"]

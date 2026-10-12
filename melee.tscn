@@ -2,13 +2,66 @@
 
 [ext_resource type="Script" uid="uid://c0mqte26crhrk" path="res://melee.gd" id="1_bg0yx"]
 [ext_resource type="Shader" uid="uid://bh7ugwpl3k4vf" path="res://combatant_outline.gdshader" id="1_fus3g"]
-[ext_resource type="Texture2D" uid="uid://b6w11lrbegigm" path="res://icon.svg" id="2_fus3g"]
+[ext_resource type="Texture2D" uid="uid://cgxmcuj82282u" path="res://Assets/drive-download-20261011T063027Z-1-001/spritesheet(1).png" id="3_5l7l7"]
 [ext_resource type="Texture2D" uid="uid://bt05qxaupm81b" path="res://Assets/VFX Free Pack/Effect_Impact/30fps/Spritesheets/Effect_Impact_1_291x301.png" id="4_5l7l7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5l7l7"]
 shader = ExtResource("1_fus3g")
 shader_parameter/flash_amount = 0.0
 shader_parameter/flash_color = Color(0.85, 0.85, 0.85, 0.85)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e0lm3"]
+atlas = ExtResource("3_5l7l7")
+region = Rect2(0, 0, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5l7l7"]
+atlas = ExtResource("3_5l7l7")
+region = Rect2(0, 1503, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3oiwi"]
+atlas = ExtResource("3_5l7l7")
+region = Rect2(1503, 1503, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kt58y"]
+atlas = ExtResource("3_5l7l7")
+region = Rect2(0, 0, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hv62q"]
+atlas = ExtResource("3_5l7l7")
+region = Rect2(1503, 0, 1503, 1503)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3oiwi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e0lm3")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5l7l7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3oiwi")
+}],
+"loop": false,
+"name": &"lunge",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kt58y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hv62q")
+}],
+"loop": true,
+"name": &"run",
+"speed": 12.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5l7l7"]
 size = Vector2(128, 129)
@@ -58,12 +111,18 @@ animations = [{
 
 [node name="Melee" type="CharacterBody2D" unique_id=473035682 groups=["Enemy"]]
 material = SubResource("ShaderMaterial_5l7l7")
+scale = Vector2(0.75, 0.75)
 collision_layer = 5
 script = ExtResource("1_bg0yx")
+hp = 60
 
-[node name="enemy_sprite" type="Sprite2D" parent="." unique_id=1053894296]
+[node name="enemy_sprite" type="AnimatedSprite2D" parent="." unique_id=1578766943]
 use_parent_material = true
-texture = ExtResource("2_fus3g")
+scale = Vector2(0.15, 0.15)
+sprite_frames = SubResource("SpriteFrames_3oiwi")
+animation = &"lunge"
+frame = 1
+frame_progress = 0.19390006
 
 [node name="HurtBox" type="CollisionShape2D" parent="." unique_id=287777457]
 position = Vector2(0, -0.5)

@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://b6a4hv5i5lwqx"]
 
-[ext_resource type="Texture2D" uid="uid://oesojkojca4" path="res://Assets/Placeholder/player_placeholder.png" id="1_4flbx"]
 [ext_resource type="Shader" uid="uid://bh7ugwpl3k4vf" path="res://combatant_outline.gdshader" id="1_dw050"]
 [ext_resource type="Script" uid="uid://cr3myncj4sike" path="res://player.gd" id="1_onrkg"]
 [ext_resource type="Script" uid="uid://mepp2pg0cv6b" path="res://heat_gauge_data.gd" id="2_2hs0m"]
 [ext_resource type="Script" uid="uid://dbam3b43e428n" path="res://aim_object.gd" id="3_hqtel"]
+[ext_resource type="Texture2D" uid="uid://crnm74v5ea1q3" path="res://Assets/drive-download-20261011T063027Z-1-001/spritesheet.png" id="4_n7ghd"]
 [ext_resource type="Texture2D" uid="uid://c1iw1c352o5px" path="res://Assets/Placeholder/slash_placeholder.png" id="4_sweqy"]
 [ext_resource type="Texture2D" uid="uid://bl7mtnuqqqyhx" path="res://Assets/Placeholder/aim_indicator_placeholder.png" id="5_sweqy"]
 [ext_resource type="Texture2D" uid="uid://bhgogjtiwagb2" path="res://Assets/Placeholder/parry_placeholder.png" id="7_1jxqw"]
@@ -20,18 +20,164 @@ shader_parameter/flash_color = Color(0.85, 0.85, 0.85, 0.85)
 script = ExtResource("2_2hs0m")
 metadata/_custom_type_script = "uid://mepp2pg0cv6b"
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_onrkg"]
-atlas = ExtResource("1_4flbx")
-region = Rect2(0, 0, 500, 500)
+[sub_resource type="AtlasTexture" id="AtlasTexture_1xqrm"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(3006, 3006, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bfour"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(3006, 0, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8gr2b"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(1503, 1503, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vl8ci"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(0, 1503, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ieltc"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(0, 4509, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fddr8"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(3006, 3006, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oybyf"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(4509, 4509, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ajfva"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(1503, 0, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5ef02"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(4509, 3006, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pfmca"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(3006, 3006, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_76oay"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(3006, 4509, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b4uyv"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(1503, 4509, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tw8ou"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(1503, 3006, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ygbnx"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(0, 3006, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v2t6f"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(3006, 1503, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l3lcn"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(4509, 1503, 1503, 1503)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xry5e"]
+atlas = ExtResource("4_n7ghd")
+region = Rect2(0, 0, 1503, 1503)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_i3pqv"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_onrkg")
+"texture": SubResource("AtlasTexture_1xqrm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bfour")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8gr2b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vl8ci")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ieltc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1xqrm")
 }],
 "loop": true,
-"name": &"default",
+"name": &"attack_down",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fddr8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oybyf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ajfva")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5ef02")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fddr8")
+}],
+"loop": true,
+"name": &"attack_forward",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pfmca")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_76oay")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b4uyv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tw8ou")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pfmca")
+}],
+"loop": true,
+"name": &"attack_up",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ygbnx")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v2t6f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l3lcn")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xry5e")
+}],
+"loop": true,
+"name": &"run",
 "speed": 5.0
 }]
 
@@ -349,10 +495,16 @@ fast_fall_speed = 100
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1703930791]
 use_parent_material = true
+scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_i3pqv")
+animation = &"run"
+offset = Vector2(80, -225)
 
 [node name="AimObject" type="Node2D" parent="." unique_id=1124077878]
 script = ExtResource("3_hqtel")
+aim_indicator_distance = null
+slash_distance = null
+parry_distance = null
 
 [node name="SlashSprite" type="AnimatedSprite2D" parent="AimObject" unique_id=396698357]
 visible = false

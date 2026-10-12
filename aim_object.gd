@@ -11,6 +11,15 @@ class_name AimObject
 @export var slash_distance: int = 500
 @export var parry_distance: int = 500
 
+enum AimQuadrant {
+	UPLEFT,
+	UPRIGHT,
+	DOWNLEFT,
+	DOWNRIGHT,
+	FORWARDLEFT,
+	FORWARDRIGHT,
+}
+var aim_vector: Vector2 = Vector2.ZERO
 
 func show_slash():
 	slash_sprite.position = aim_indicator_sprite.position.normalized() * slash_distance
@@ -53,10 +62,12 @@ func enable_parry_area(parry_duration: float):
 
 func _process(delta):
 	var mouse_position: Vector2 = get_global_mouse_position()
-	var angle_to_aim = (mouse_position - global_position).angle() + PI/2
+	aim_vector = (mouse_position - global_position).normalized()
+	var aim_angle = (mouse_position - global_position).angle() + PI/2
 	
 	aim_indicator_sprite.position = (mouse_position - global_position).normalized() * aim_indicator_distance
-	aim_indicator_sprite.rotation = angle_to_aim
+	aim_indicator_sprite.rotation = aim_angle
+	print(AimQuadrant.keys()[get_aim_quadrant()])
 
 func slash(slash_duration: float):
 	show_slash()
@@ -69,3 +80,17 @@ func parry(parry_duration: float):
 	parry_area.rotation = aim_indicator_sprite.rotation
 	
 	
+func get_aim_quadrant():
+	var angle = aim_vector.angle()
+	if angle >= -PI/6 and angle < PI/6:
+		return AimQuadrant.FORWARDRIGHT
+	elif angle >= PI/6 and angle < PI/2:
+		return AimQuadrant.DOWNRIGHT
+	elif angle >= PI/2 and angle < 5*PI/6:
+		return AimQuadrant.DOWNLEFT
+	elif angle >= 5*PI/6 or angle < -5*PI/6:
+		return AimQuadrant.FORWARDLEFT
+	elif angle >= -5*PI/6 and angle < -PI/2:
+		return AimQuadrant.UPLEFT
+	else:
+		return AimQuadrant.UPRIGHT

@@ -36,7 +36,7 @@ class_name Player
 @export var slash_damage: int = 10
 @export var slash_knockback: float = 500
 
-@export var air_jumps: int = 1
+@export var air_jumps: int = 0
 
 @export var damage_flash_duration: float = 0.25
 @export var damage_flash_total: int = 2
@@ -48,6 +48,7 @@ class_name Player
 
 @onready var aim_object: AimObject = $AimObject
 @onready var particles: AnimatedSprite2D = $Particles
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 var knockback_vector: Vector2 = Vector2.ZERO
 var dash_vector: Vector2 = Vector2.ZERO
@@ -81,6 +82,9 @@ var last_grounded_position: Vector2
 
 var heat: HeatGauge
 var ui: PlayerUI
+
+
+signal on_death
 
 func _ready():
 	material = material.duplicate()
@@ -173,9 +177,21 @@ func calculate_velocity(delta):
 
 func _physics_process(delta):
 	velocity = calculate_velocity(delta)
+
+	if !is_on_floor():
+		sprite.play("jump")
+	elif velocity.x != 0 && knockback_vector.length() <= 0:
+		if velocity.x < 0:
+			sprite.flip_h = true
+		else:
+			sprite.flip_h = false
+		sprite.play("run")
+	else:
+		sprite.play("idle")
 	
 	if is_on_floor() && !is_hazarded:
 		last_grounded_position = global_position
+	
 	
 	move_and_slide()
 
@@ -190,6 +206,7 @@ func _unhandled_input(event):
 		print(heat.calculate_movement_multiplier())
 		is_slashing = true
 		slash_time = current_time
+		play_slash_animation()
 		
 	if event.is_action_pressed("secondary"):
 		aim_object.parry(parry_duration)
@@ -217,6 +234,27 @@ func heal_start():
 	is_healing = true
 	particles.play("heal")
 		
+func play_slash_animation():
+	var aim_quadrant = aim_object.get_aim_quadrant()
+	match aim_quadrant:
+		AimObject.AimQuadrant.UPLEFT:
+			sprite.flip_h = true
+			sprite.play("attack_up")
+		AimObject.AimQuadrant.UPRIGHT:
+			sprite.flip_h = false
+			sprite.play("attack_up")
+		AimObject.AimQuadrant.DOWNLEFT:
+			sprite.flip_h = true
+			sprite.play("attack_down")
+		AimObject.AimQuadrant.DOWNRIGHT:
+			sprite.flip_h = false
+			sprite.play("attack_down")
+		AimObject.AimQuadrant.FORWARDLEFT:
+			sprite.flip_h = true
+			sprite.play("attack_forward")
+		AimObject.AimQuadrant.FORWARDRIGHT:
+			sprite.flip_h = false
+			sprite.play("attack_forward")
 
 func _on_slash_area_body_entered(body):
 	if body.is_in_group("Enemy"):
@@ -239,9 +277,11 @@ func take_damage(damage: int) -> void:
 		return
 	hp -= damage
 	update_hp()
-	if hp <= 0:
-		queue_free()
 	damage_flash()
+	if hp <= 0:
+		on_death.emit()
+		await get_tree().create_timer(1.0).timeout
+		queue_free()
 
 func apply_knockback(knockback: float, source_position: Vector2, kb_vector: Vector2 = Vector2.ZERO) -> void:
 	if kb_vector != Vector2.ZERO:
@@ -287,3 +327,8 @@ func damage_flash():
 func apply_powerup(powerup_id: String) -> void:
 	if powerup_id == "healing":
 		can_heal = true
+	elif powerup_id == "double_jump":
+		air_jumps += 1
+		remaining_air_jumps = air_jumps
+	elif powerup_id == "increased_damage":
+		slash_damage += 5
